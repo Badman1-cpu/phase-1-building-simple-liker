@@ -5,26 +5,24 @@ const FULL_HEART = '♥'
 // Your JavaScript code goes here!
 document.addEventListener("DOMContentLoaded", () => {
   const errorModal = document.getElementById("modal");
-  const likeButtons = document.querySelectorAll(".like-glyph");
-
-  errorModal.classList.add("hidden");
-
-  likeButtons.forEach(button => {
-      button.addEventListener("click", () => {
-          mimicServerCall()
-              .then(() => {
-                  button.classList.toggle("activated-heart");
-                  button.classList.toggle("like-glyph-active");
-              })
-              .catch(() => {
-                  errorModal.classList.remove("hidden");
-                  const errorMessage = document.getElementById("modal-message");
-                  errorMessage.textContent = "Server Error! Please try again later.";
-                  setTimeout(() => {
-                      errorModal.classList.add("hidden");
-                  }, 3000);
-              });
-      });
+  errorModal.classList.add("hidden"); // Add hidden class initially
+  
+  const likeButton = document.getElementById("like-button");
+  likeButton.addEventListener("click", () => {
+      mimicServerCall()
+          .then(() => {
+              // On success
+              likeButton.classList.add("activated-heart");
+          })
+          .catch(() => {
+              // On failure
+              errorModal.classList.remove("hidden"); // Show error modal
+              const errorMessage = document.getElementById("modal-message");
+              errorMessage.textContent = "Server Error! Please try again later."; // Display error message
+              setTimeout(() => {
+                  errorModal.classList.add("hidden"); // Hide error modal after 3 seconds
+              }, 3000);
+          });
   });
 });
 
@@ -41,9 +39,6 @@ function mimicServerCall() {
       }, 1000);
   });
 }
-
-
-
 //------------------------------------------------------------------------------
 // Don't change the code below: this function mocks the server response
 //------------------------------------------------------------------------------
